@@ -1,8 +1,14 @@
-<form [formGroup]="tumblrForm">
+<form
+  [formGroup]="tumblrForm"
+  (ngSubmit)="submitTumblrForm()">
   <label for="blog-name-input">Blog</label>
   <input
     id="blog-name-input"
     type="text"
     autocomplete="off"
     formControlName="blog">
+  <div *ngIf="blog">
+    <span [innerHTML]="blog.name"></span>
+    <span [innerHTML]="blog.postCount"></span>
+  </div>
 </form>

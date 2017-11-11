@@ -2,6 +2,31 @@ import { Action } from '@ngrx/store';
 import * as actionTypes from './action-types';
 import { Post } from './model';
 
+export class FetchInfo implements Action {
+  readonly type = actionTypes.FETCH_INFO;
+  constructor(public payload: {
+    blogName: string,
+    apiKey: string
+  }) {}
+}
+
+export class FetchInfoSuccess implements Action {
+  readonly type = actionTypes.FETCH_INFO_SUCCESS;
+  constructor(public payload: {
+    blogName: string,
+    blogSize: number
+  }) {}
+}
+
+export class FetchInfoFail implements Action {
+  readonly type = actionTypes.FETCH_INFO_FAIL;
+  constructor(public payload: {
+    blogName: string,
+    apiKey: string,
+    error: any
+  }) {}
+}
+
 export class FetchPosts implements Action {
   readonly type = actionTypes.FETCH_POSTS;
   constructor(public payload: {
@@ -32,6 +57,9 @@ export class DeleteAllPosts implements Action {
 }
 
 export type BlogAction =
+  FetchInfo |
+  FetchInfoSuccess |
+  FetchInfoFail |
   FetchPosts |
   FetchPostsSuccess |
   FetchPostsFail |

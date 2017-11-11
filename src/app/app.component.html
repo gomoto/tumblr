@@ -1,18 +1,18 @@
 <form
   class="blog-form"
   [formGroup]="tumblrForm"
-  (ngSubmit)="submitTumblrForm()">
+  (ngSubmit)="getInfo()">
   <input
     type="text"
     class="blog-name-input"
     autocomplete="off"
     formControlName="blog"
     placeholder="Tumblr blog">
-  <div *ngIf="blog">
-    <span [innerHTML]="blog.name"></span>
+  <div *ngIf="name">
+    <span [innerHTML]="name"></span>
     <span [innerHTML]="cursor"></span>
     <span>/</span>
-    <span [innerHTML]="blog.postCount"></span>
+    <span [innerHTML]="size"></span>
     <button (click)="getPosts()">Next 20 posts</button>
     <button (click)="deleteAllPosts()">Remove all posts</button>
     <ul>

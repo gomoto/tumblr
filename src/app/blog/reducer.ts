@@ -3,12 +3,23 @@ import { BlogAction } from './actions';
 import { State } from './state';
 
 const initialState: State = {
+  name: '',
+  size: 0,
   cursor: 0,
   posts: {}
 };
 
 export function reducer(state = initialState, action: BlogAction) {
   switch(action.type) {
+    case actionTypes.FETCH_INFO_SUCCESS: {
+      return {
+        name: action.payload.blogName,
+        size: action.payload.blogSize,
+        // Reset cursor and posts for new blog.
+        cursor: 0,
+        posts: {}
+      }
+    }
     case actionTypes.FETCH_POSTS_SUCCESS: {
       // Merge in new posts; update cursor position.
       const posts = action.payload.posts;
@@ -17,12 +28,16 @@ export function reducer(state = initialState, action: BlogAction) {
         return _fetchedPostsById;
       }, {});
       return {
+        name: state.name,
+        size: state.size,
         cursor: state.cursor + posts.length,
         posts: Object.assign({}, state.posts, fetchedPostsById)
       };
     }
     case actionTypes.DELETE_ALL_POSTS: {
       return {
+        name: state.name,
+        size: state.size,
         cursor: state.cursor,
         posts: {}
       }

@@ -8,7 +8,7 @@ import * as actions from './actions';
 import * as actionTypes from './action-types';
 import { Post } from './model';
 import { BlogService } from './service';
-import { PostsResponse } from '../tumblr';
+import { InfoResponse, PostsResponse } from '../tumblr';
 
 @Injectable()
 export class BlogEffects {
@@ -24,7 +24,28 @@ export class BlogEffects {
     tap<Action>((action) => {
       console.debug(`Action: ${action.type}`, action['payload']);
     })
-  );
+  )
+
+  @Effect()
+  fetchInfo$ = this.actions$
+  .ofType(actionTypes.FETCH_INFO)
+  .pipe(
+    mergeMap((action: actions.FetchInfo) => {
+      const apiKey = action.payload.apiKey;
+      const blogName = action.payload.blogName;
+      return this.blogService.fetchInfo(blogName, apiKey)
+      .pipe(
+        map<InfoResponse, actions.FetchInfoSuccess>((infoResponse) => {
+          const blog = infoResponse.response.blog;
+          return new actions.FetchInfoSuccess({
+            blogName: blog.name,
+            blogSize: blog.posts
+          });
+        }),
+        catchError<any, actions.FetchInfoFail>((error) => Observable.of(new actions.FetchInfoFail({blogName, apiKey, error})))
+      )
+    })
+  )
 
   @Effect()
   fetchPosts$ = this.actions$

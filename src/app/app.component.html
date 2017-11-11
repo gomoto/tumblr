@@ -1,14 +1,21 @@
 <ng-container *ngIf="name; then blog else blogForm"></ng-container>
 <ng-template #blog>
-  <header>
-    <span [innerHTML]="name"></span>
-    <span [innerHTML]="cursor"></span>
-    <span>/</span>
-    <span [innerHTML]="size"></span>
-    <button type="button" (click)="getPosts()">Next 20 posts</button>
-    <button type="button" (click)="deleteAllPosts()">Remove all posts</button>
+  <header class="blog-info">
+    <h1>
+      <a href="https://{{name}}.tumblr.com" [innerHTML]="name"></a>
+    </h1>
+    <h2>
+      <span [innerHTML]="cursor"></span>
+      <span>/</span>
+      <span [innerHTML]="size"></span>
+    </h2>
+    <div>
+      <button type="button" (click)="getPosts()">Get next 20 posts</button>
+      <span>·</span>
+      <button type="button" (click)="deleteAllPosts()">Remove all posts</button>
+    </div>
   </header>
-  <ul>
+  <ul class="blog-posts">
     <li *ngFor="let post of posts$ | async">
       <span>{{post.notes}} notes</span>
       <span>{{post.date}}</span>

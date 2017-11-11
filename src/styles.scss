@@ -1,1 +1,9 @@
 @import 'styles/reset';
+
+app-root {
+  font: 14px;
+  line-height: 24px;
+}
+input[type="text"] {
+  padding: 0 2px;
+}

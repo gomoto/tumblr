@@ -6,7 +6,8 @@ export class FetchPosts implements Action {
   readonly type = actionTypes.FETCH_POSTS;
   constructor(public payload: {
     blogName: string,
-    apiKey: string
+    apiKey: string,
+    offset: number
   }) {}
 }
 

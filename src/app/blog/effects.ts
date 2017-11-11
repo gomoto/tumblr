@@ -33,7 +33,8 @@ export class BlogEffects {
     mergeMap((action: actions.FetchPosts) => {
       const apiKey = action.payload.apiKey;
       const blogName = action.payload.blogName;
-      return this.blogService.fetchPosts(blogName, apiKey)
+      const offset = action.payload.offset;
+      return this.blogService.fetchPosts(blogName, apiKey, offset)
       .pipe(
         map<PostsResponse, actions.FetchPostsSuccess>((postsResponse) => {
           const posts: Post[] = postsResponse.response.posts.map((post) => ( <Post> {

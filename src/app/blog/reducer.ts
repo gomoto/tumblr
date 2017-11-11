@@ -3,19 +3,21 @@ import { BlogAction } from './actions';
 import { State } from './state';
 
 const initialState: State = {
+  cursor: 0,
   posts: {}
 };
 
 export function reducer(state = initialState, action: BlogAction) {
   switch(action.type) {
     case actionTypes.FETCH_POSTS_SUCCESS: {
-      // Merge in new posts.
+      // Merge in new posts; update cursor position.
       const posts = action.payload.posts;
       const fetchedPostsById = posts.reduce((_fetchedPostsById, post) => {
         _fetchedPostsById[post.id] = post;
         return _fetchedPostsById;
       }, {});
       return {
+        cursor: state.cursor + posts.length,
         posts: Object.assign({}, state.posts, fetchedPostsById)
       };
     }

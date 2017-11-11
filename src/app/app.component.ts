@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import * as request from 'request';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { InfoResponse, PostsResponse } from './tumblr';
 import { Store } from '@ngrx/store';
 import * as selectors from './selectors';
@@ -31,6 +31,10 @@ export class AppComponent {
   tumblrForm: FormGroup;
   blog: Blog | null;
   posts$: Observable<Post[]>;
+  cursor: number;
+
+  // Manage all rxjs subscriptions in one place.
+  private _subscriptions = new Subscription();
 
   constructor(
     private formBuilder: FormBuilder,
@@ -40,7 +44,15 @@ export class AppComponent {
       blog: this.formBuilder.control('')
     });
     this.blog = null;
-    this.posts$ = this.store.select(selectors.blogPostsSortedByNoteCount)
+    this.posts$ = this.store.select(selectors.blogPostsSortedByNoteCount);
+    const cursorSubscription = this.store.select(selectors.blogCursor).subscribe((cursor) => {
+      this.cursor = cursor;
+    });
+    this._subscriptions.add(cursorSubscription);
+  }
+
+  ngOnDestroy(): void {
+    this._subscriptions.unsubscribe();
   }
 
   submitTumblrForm(): void {
@@ -64,7 +76,8 @@ export class AppComponent {
     }
     this.store.dispatch(new _blog.actions.FetchPosts({
       blogName: this.blog.name,
-      apiKey: apiKey
+      apiKey: apiKey,
+      offset: this.cursor
     }));
   }
 }

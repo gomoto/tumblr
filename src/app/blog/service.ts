@@ -11,8 +11,8 @@ export class BlogService {
     private http: HttpClient
   ) {}
 
-  fetchPosts(blogName: string, apiKey: string): Observable<PostsResponse> {
-    const url = `https://api.tumblr.com/v2/blog/${blogName}/posts?api_key=${apiKey}`;
+  fetchPosts(blogName: string, apiKey: string, offset: number): Observable<PostsResponse> {
+    const url = `https://api.tumblr.com/v2/blog/${blogName}/posts?api_key=${apiKey}&offset=${offset}`;
     return this.http.get<PostsResponse>(url);
   }
 }

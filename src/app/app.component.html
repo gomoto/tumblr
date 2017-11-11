@@ -10,5 +10,6 @@
   <div *ngIf="blog">
     <span [innerHTML]="blog.name"></span>
     <span [innerHTML]="blog.postCount"></span>
+    <button (click)="getPosts()">20 more posts</button>
   </div>
 </form>

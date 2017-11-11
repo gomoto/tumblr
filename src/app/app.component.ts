@@ -45,4 +45,12 @@ export class AppComponent {
       };
     });
   }
+
+  getPosts(): void {
+    const url = `https://api.tumblr.com/v2/blog/${this.blog.name}/posts?api_key=${apiKey}`;
+    request(url, (error, response, body) => {
+      const data: InfoResponse = JSON.parse(body);
+      console.log(data);
+    });
+  }
 }

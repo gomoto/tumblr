@@ -1,26 +1,31 @@
-<form
-  class="blog-form"
-  [formGroup]="tumblrForm"
-  (ngSubmit)="getInfo()">
-  <input
-    type="text"
-    class="blog-name-input"
-    autocomplete="off"
-    formControlName="blog"
-    placeholder="Tumblr blog">
-  <div *ngIf="name">
+<ng-container *ngIf="name; then blog else blogForm"></ng-container>
+<ng-template #blog>
+  <header>
     <span [innerHTML]="name"></span>
     <span [innerHTML]="cursor"></span>
     <span>/</span>
     <span [innerHTML]="size"></span>
     <button type="button" (click)="getPosts()">Next 20 posts</button>
     <button type="button" (click)="deleteAllPosts()">Remove all posts</button>
-    <ul>
-      <li *ngFor="let post of posts$ | async">
-        <span>{{post.notes}} notes</span>
-        <span>{{post.date}}</span>
-        <a href="{{post.link}}" target="_blank">Link</a>
-      </li>
-    </ul>
-  </div>
-</form>
+  </header>
+  <ul>
+    <li *ngFor="let post of posts$ | async">
+      <span>{{post.notes}} notes</span>
+      <span>{{post.date}}</span>
+      <a href="{{post.link}}" target="_blank">Link</a>
+    </li>
+  </ul>
+</ng-template>
+<ng-template #blogForm>
+  <form
+    class="blog-form"
+    [formGroup]="tumblrForm"
+    (ngSubmit)="getInfo()">
+    <input
+      type="text"
+      class="blog-name-input"
+      autocomplete="off"
+      formControlName="blog"
+      placeholder="Tumblr blog">
+  </form>
+</ng-template>

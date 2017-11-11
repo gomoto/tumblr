@@ -1,7 +1,12 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import * as request from 'request';
+import { Observable } from 'rxjs';
 import { InfoResponse, PostsResponse } from './tumblr';
+import { Store } from '@ngrx/store';
+import * as selectors from './selectors';
+import { State } from './state';
+import * as _blog from './blog';
 
 const apiKey = 'u9oKp2z6VfHuyX7mkfX40S2uSfjZpYSKc6EkMWo2F9SbVtM1hS';
 
@@ -25,14 +30,17 @@ interface Post {
 export class AppComponent {
   tumblrForm: FormGroup;
   blog: Blog | null;
+  posts$: Observable<Post[]>;
 
   constructor(
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private store: Store<State>
   ) {
     this.tumblrForm = this.formBuilder.group({
       blog: this.formBuilder.control('')
     });
     this.blog = null;
+    this.posts$ = this.store.select(selectors.blogPostsSortedByNoteCount)
   }
 
   submitTumblrForm(): void {
@@ -54,17 +62,9 @@ export class AppComponent {
     if (this.blog === null) {
       throw new Error('blog must be defined before getting posts');
     }
-    const url = `https://api.tumblr.com/v2/blog/${this.blog.name}/posts?api_key=${apiKey}`;
-    request(url, (error, response, body) => {
-      const data: PostsResponse = JSON.parse(body);
-      // Set blog posts.
-      this.blog.posts = data.response.posts.map((post) => {
-        return <Post> {
-          date: post.date,
-          link: `https://${post.blog_name}.tumblr.com/post/${post.id}`,
-          notes: post.note_count
-        };
-      });
-    });
+    this.store.dispatch(new _blog.actions.FetchPosts({
+      blogName: this.blog.name,
+      apiKey: apiKey
+    }));
   }
 }

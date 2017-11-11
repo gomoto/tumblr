@@ -27,7 +27,13 @@ export class FetchPostsFail implements Action {
   }) {}
 }
 
+export class DeleteAllPosts implements Action {
+  readonly type = actionTypes.DELETE_ALL_POSTS;
+}
+
 export type BlogAction =
   FetchPosts |
   FetchPostsSuccess |
-  FetchPostsFail;
+  FetchPostsFail |
+  DeleteAllPosts |
+  null;

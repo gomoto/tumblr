@@ -21,6 +21,12 @@ export function reducer(state = initialState, action: BlogAction) {
         posts: Object.assign({}, state.posts, fetchedPostsById)
       };
     }
+    case actionTypes.DELETE_ALL_POSTS: {
+      return {
+        cursor: state.cursor,
+        posts: {}
+      }
+    }
     default: {
       return state;
     }

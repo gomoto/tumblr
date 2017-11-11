@@ -80,4 +80,8 @@ export class AppComponent {
       offset: this.cursor
     }));
   }
+
+  deleteAllPosts(): void {
+    this.store.dispatch(new _blog.actions.DeleteAllPosts());
+  }
 }

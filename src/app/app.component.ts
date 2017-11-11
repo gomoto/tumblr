@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Observable, Subscription } from 'rxjs';
-import { InfoResponse, PostsResponse } from './tumblr';
 import { Store } from '@ngrx/store';
+
 import * as selectors from './selectors';
 import { State } from './state';
 import * as _blog from './blog';
@@ -16,10 +16,10 @@ const apiKey = 'u9oKp2z6VfHuyX7mkfX40S2uSfjZpYSKc6EkMWo2F9SbVtM1hS';
 })
 export class AppComponent {
   tumblrForm: FormGroup;
-  posts$: Observable<_blog.Post[]>;
-  cursor: number;
   name: string;
   size: number;
+  cursor: number;
+  posts$: Observable<_blog.Post[]>;
 
   // Manage all rxjs subscriptions in one place.
   private _subscriptions = new Subscription();
@@ -31,19 +31,19 @@ export class AppComponent {
     this.tumblrForm = this.formBuilder.group({
       blog: this.formBuilder.control('')
     });
-    this.posts$ = this.store.select(selectors.blogPostsSortedByNoteCount);
-    const cursorSubscription = this.store.select(selectors.blogCursor).subscribe((cursor) => {
-      this.cursor = cursor;
-    });
     const nameSubscription = this.store.select(selectors.blogName).subscribe((name) => {
       this.name = name;
     });
     const sizeSubscription = this.store.select(selectors.blogSize).subscribe((size) => {
       this.size = size;
     });
-    this._subscriptions.add(cursorSubscription);
+    const cursorSubscription = this.store.select(selectors.blogCursor).subscribe((cursor) => {
+      this.cursor = cursor;
+    });
+    this.posts$ = this.store.select(selectors.blogPostsSortedByNoteCount);
     this._subscriptions.add(nameSubscription);
     this._subscriptions.add(sizeSubscription);
+    this._subscriptions.add(cursorSubscription);
   }
 
   ngOnDestroy(): void {
@@ -51,8 +51,7 @@ export class AppComponent {
   }
 
   getInfo(): void {
-    const blogControl = this.tumblrForm.get('blog') as FormControl;
-    const blogName = blogControl.value;
+    const blogName: string = this.tumblrForm.get('blog').value;
     this.store.dispatch(new _blog.actions.FetchInfo({blogName, apiKey}));
   }
 

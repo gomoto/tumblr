@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { Post } from './model';
 import { InfoResponse, PostsResponse } from '../tumblr';
 
 @Injectable()

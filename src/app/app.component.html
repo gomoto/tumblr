@@ -11,5 +11,12 @@
     <span [innerHTML]="blog.name"></span>
     <span [innerHTML]="blog.postCount"></span>
     <button (click)="getPosts()">20 more posts</button>
+    <ul>
+      <li *ngFor="let post of blog.posts">
+        <span>{{post.notes}} notes</span>
+        <span>{{post.date}}</span>
+        <a href="{{post.link}}" target="_blank">Link</a>
+      </li>
+    </ul>
   </div>
 </form>

@@ -1,0 +1,71 @@
+html {
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+  box-sizing: border-box;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+body {
+  margin: 0;
+  // Mac and Windows system fonts, followed by Helvetica font stack.
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  // -moz-osx-font-smoothing: grayscale;
+  // -webkit-font-smoothing: antialiased;
+}
+div, span,
+h1, h2, h3, h4, h5, h6,
+a, em, b, u, i,
+button, img, form, label,
+p, nav, pre,
+table, tbody, tfoot, thead, tr, th, td,
+article, canvas, footer, header, hgroup, section,
+ol, ul, li {
+  margin: 0;
+  padding: 0;
+}
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+ol, ul {
+	list-style: none;
+}
+button,
+input,
+select,
+textarea,
+th,
+time {
+	font: inherit;
+  line-height: inherit;
+}
+a,
+button,
+input {
+  color: inherit;
+}
+a {
+  text-decoration: none;
+}
+button {
+  overflow: visible;//IE
+  border: 0;
+  background: none;
+  -webkit-font-smoothing: inherit;
+  letter-spacing: inherit;
+  cursor: pointer;
+}
+input {
+  padding: 0;
+}
+::-moz-focus-inner {
+  padding: 0;
+  border: 0;
+}
+img {
+  max-width: 100%;
+  height: auto;
+  border: 0;//IE
+}

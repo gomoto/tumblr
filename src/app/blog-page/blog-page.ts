@@ -16,8 +16,9 @@ const apiKey = 'u9oKp2z6VfHuyX7mkfX40S2uSfjZpYSKc6EkMWo2F9SbVtM1hS';
 })
 export class BlogPage {
   name: string;
+  start: number;
+  end: number;
   size: number;
-  cursor: number;
   posts$: Observable<_blog.Post[]>;
 
   // Manage all rxjs subscriptions in one place.
@@ -30,16 +31,30 @@ export class BlogPage {
   ) {
     this.name = activatedRoute.snapshot.params.blogName;
 
-    const cursorSubscription = activatedRoute.queryParamMap.subscribe((queryParamMap) => {
-      this.cursor = parseInt(queryParamMap.get('cursor'));
-      if (isNaN(this.cursor)) {
-        this.cursor = 0;
+    const queryParamMapSubscription = activatedRoute.queryParamMap.subscribe((queryParamMap) => {
+      this.start = parseInt(queryParamMap.get('start'));
+      this.end = parseInt(queryParamMap.get('end'));
+      if (isNaN(this.start)) {
+        this.start = 1;
       }
+      if (isNaN(this.end)) {
+        this.end = 20;
+      }
+      if (this.start < 1) {
+        throw new Error('Bad query param for start');
+      }
+      // TODO: validate end param against total size.
+      if (this.start > this.end) {
+        throw new Error('Bad query params for start and end');
+      }
+      // Ranges need to be converted here. Example:
+      // Human-friendly range is 1-10, including 10.
+      // Machine-friendly range is 0-10, excluding 10.
       this.store.dispatch(new _blog.actions.FetchPosts({
         blogName: this.name,
         apiKey: apiKey,
-        limit: 20,
-        offset: this.cursor
+        start: this.start - 1,
+        end: this.end
       }));
     });
 
@@ -47,6 +62,7 @@ export class BlogPage {
       this.size = size;
     });
     this.posts$ = this.store.select(selectors.blogPostsSortedByNoteCount);
+    this._subscriptions.add(queryParamMapSubscription);
     this._subscriptions.add(sizeSubscription);
   }
 
@@ -62,7 +78,8 @@ export class BlogPage {
   getPosts(): void {
     this.router.navigate([this.name], {
       queryParams: {
-        cursor: this.cursor + 20
+        start: this.end + 1,
+        end: this.end + 1 + this.end - this.start
       }
     });
   }

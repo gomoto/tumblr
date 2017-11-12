@@ -3,12 +3,14 @@
     <a href="https://{{name}}.tumblr.com" [innerHTML]="name"></a>
   </h1>
   <h2>
-    <span [innerHTML]="cursor"></span>
+    <span [innerHTML]="start"></span>
+    <span>-</span>
+    <span [innerHTML]="end"></span>
     <span>/</span>
     <span [innerHTML]="size"></span>
   </h2>
   <div>
-    <button type="button" (click)="getPosts()">Get next 20 posts</button>
+    <button type="button" (click)="getPosts()">Get next {{end - start + 1}} posts</button>
     <span>·</span>
     <button type="button" (click)="deleteAllPosts()">Remove all posts</button>
   </div>

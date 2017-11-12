@@ -32,8 +32,8 @@ export class FetchPosts implements Action {
   constructor(public payload: {
     blogName: string,
     apiKey: string,
-    limit: number,
-    offset: number
+    start: number,
+    end: number
   }) {}
 }
 

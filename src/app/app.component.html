@@ -22,9 +22,9 @@
         [ngStyle]="{'background-image': 'url(' + getPostPreviewUrl(post) + ')'}"
         title="{{post.date}}"
         target="_blank">
-        <a class="blog-post-notes" href="{{post.link}}" target="_blank">
-          {{post.notes}} notes
-        </a>
+      </a>
+      <a class="blog-notes" href="{{post.link}}" target="_blank">
+        {{post.notes}} notes
       </a>
     </li>
   </ul>

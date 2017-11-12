@@ -17,16 +17,21 @@
   flex-wrap: wrap;
 }
 .blog-post {
-  display: block;
   flex: 0 0 auto;
+  position: relative;
+  display: block;
   height: 200px;
   width: 200px;
   margin: 4px;
   overflow: hidden;
-}
-.blog-link {
   display: flex;
   align-items: flex-start;
+}
+.blog-link {
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 0;
   height: 100%;
   width: 100%;
   background-color: #222222;
@@ -34,8 +39,9 @@
   background-position: center;
   background-size: cover; // contain
 }
-.blog-post-notes {
+.blog-notes {
   flex: 0 0 auto;
+  position: relative;
   background: rgba(0,0,0,0.24);
   color: #fafafa;
   font-size: 12px;

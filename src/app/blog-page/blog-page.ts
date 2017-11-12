@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
 
@@ -25,18 +25,28 @@ export class BlogPage {
 
   constructor(
     private activatedRoute: ActivatedRoute,
+    private router: Router,
     private store: Store<State>
   ) {
     this.name = activatedRoute.snapshot.params.blogName;
+
+    const cursorSubscription = activatedRoute.queryParamMap.subscribe((queryParamMap) => {
+      this.cursor = parseInt(queryParamMap.get('cursor'));
+      if (isNaN(this.cursor)) {
+        this.cursor = 0;
+      }
+      this.store.dispatch(new _blog.actions.FetchPosts({
+        blogName: this.name,
+        apiKey: apiKey,
+        offset: this.cursor
+      }));
+    });
+
     const sizeSubscription = this.store.select(selectors.blogSize).subscribe((size) => {
       this.size = size;
     });
-    const cursorSubscription = this.store.select(selectors.blogCursor).subscribe((cursor) => {
-      this.cursor = cursor;
-    });
     this.posts$ = this.store.select(selectors.blogPostsSortedByNoteCount);
     this._subscriptions.add(sizeSubscription);
-    this._subscriptions.add(cursorSubscription);
   }
 
   ngOnInit(): void {
@@ -49,11 +59,11 @@ export class BlogPage {
   }
 
   getPosts(): void {
-    this.store.dispatch(new _blog.actions.FetchPosts({
-      blogName: this.name,
-      apiKey: apiKey,
-      offset: this.cursor
-    }));
+    this.router.navigate([this.name], {
+      queryParams: {
+        cursor: this.cursor + 20
+      }
+    });
   }
 
   deleteAllPosts(): void {

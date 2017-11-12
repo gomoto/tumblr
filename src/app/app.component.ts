@@ -66,4 +66,32 @@ export class AppComponent {
   deleteAllPosts(): void {
     this.store.dispatch(new _blog.actions.DeleteAllPosts());
   }
+
+  getPostLinkUrl(post: _blog.Post): string {
+    switch(post.type) {
+      case 'photo': {
+        return post.imageUrl;
+      }
+      case 'video': {
+        return post.videoUrl;
+      }
+      default: {
+        return post.link;
+      }
+    }
+  }
+
+  getPostPreviewUrl(post: _blog.Post): string {
+    switch(post.type) {
+      case 'photo': {
+        return post.imagePreviewUrl;
+      }
+      case 'video': {
+        return post.videoPreviewUrl;
+      }
+      default: {
+        return '';
+      }
+    }
+  }
 }

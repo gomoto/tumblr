@@ -76,6 +76,7 @@ export interface TumblrPost {
   is_blocks_post_format: boolean;
   link_url: string;
   note_count: number;
+  // Photo posts only:
   photos: {
     alt_sizes: TumblrPhoto[];
     caption: string;
@@ -92,8 +93,13 @@ export interface TumblrPost {
   state: string;
   summary: string;
   tags: string[];
+  // Video posts only:
+  thumbnail_url: string;
   timestamp: number;
+  // All posts:
   type: string;
+  // Video posts only:
+  video_url: string;
 }
 
 export interface TumblrPhoto {

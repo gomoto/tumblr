@@ -62,7 +62,26 @@ export class BlogEffects {
             id: `${post.id}`,
             date: post.date,
             link: `https://${post.blog_name}.tumblr.com/post/${post.id}`,
-            notes: post.note_count
+            notes: post.note_count,
+            type: post.type,
+            // Use smallest version of first image in the post.
+            imagePreviewUrl: (
+              post.photos &&
+              post.photos[0] &&
+              post.photos[0].alt_sizes &&
+              post.photos[0].alt_sizes[post.photos[0].alt_sizes.length - 1] &&
+              post.photos[0].alt_sizes[post.photos[0].alt_sizes.length - 1].url ||
+              null
+            ),
+            imageUrl: (
+              post.photos &&
+              post.photos[0] &&
+              post.photos[0].original_size &&
+              post.photos[0].original_size.url ||
+              null
+            ),
+            videoPreviewUrl: post.thumbnail_url,
+            videoUrl: post.video_url
           }));
           return new actions.FetchPostsSuccess({posts});
         }),

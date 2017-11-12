@@ -5,6 +5,39 @@
 .blog-info,
 .blog-posts,
 .blog-form {
-  display: block;
   margin: 24px 0;
+}
+.blog-info,
+.blog-form {
+  display: block;
+}
+.blog-posts {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+.blog-post {
+  display: block;
+  flex: 0 0 auto;
+  height: 200px;
+  width: 200px;
+  margin: 4px;
+  overflow: hidden;
+}
+.blog-link {
+  display: block;
+  height: 100%;
+  width: 100%;
+  background-color: #222222;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover; // contain
+}
+.blog-post-date,
+.blog-post-notes {
+  display: block;
+  padding: 0 4px;
+  background: rgba(0,0,0,0.24);
+  color: #fafafa;
+  font-size: 12px;
 }

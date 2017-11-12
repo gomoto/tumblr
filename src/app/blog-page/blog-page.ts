@@ -38,6 +38,7 @@ export class BlogPage {
       this.store.dispatch(new _blog.actions.FetchPosts({
         blogName: this.name,
         apiKey: apiKey,
+        limit: 20,
         offset: this.cursor
       }));
     });

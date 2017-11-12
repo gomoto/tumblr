@@ -55,7 +55,8 @@ export class BlogEffects {
       const apiKey = action.payload.apiKey;
       const blogName = action.payload.blogName;
       const offset = action.payload.offset;
-      return this.blogService.fetchPosts(blogName, apiKey, offset)
+      const limit = action.payload.limit;
+      return this.blogService.fetchPosts(blogName, apiKey, limit, offset)
       .pipe(
         map<PostsResponse, actions.FetchPostsSuccess>((postsResponse) => {
           const posts: Post[] = postsResponse.response.posts.map((post) => ( <Post> {

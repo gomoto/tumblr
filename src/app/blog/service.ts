@@ -15,8 +15,8 @@ export class BlogService {
     return this.http.get<InfoResponse>(url);
   }
 
-  fetchPosts(blogName: string, apiKey: string, offset: number): Observable<PostsResponse> {
-    const url = `https://api.tumblr.com/v2/blog/${blogName}/posts?api_key=${apiKey}&offset=${offset}`;
+  fetchPosts(blogName: string, apiKey: string, limit: number, offset: number): Observable<PostsResponse> {
+    const url = `https://api.tumblr.com/v2/blog/${blogName}/posts?api_key=${apiKey}&limit=${limit}&offset=${offset}`;
     return this.http.get<PostsResponse>(url);
   }
 }

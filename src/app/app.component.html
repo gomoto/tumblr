@@ -20,9 +20,9 @@
       <a class="blog-link"
         href="{{getPostLinkUrl(post)}}"
         [ngStyle]="{'background-image': 'url(' + getPostPreviewUrl(post) + ')'}"
+        title="{{post.date}}"
         target="_blank">
         <span class="blog-post-notes">{{post.notes}} notes</span>
-        <span class="blog-post-date">{{post.date}}</span>
       </a>
     </li>
   </ul>

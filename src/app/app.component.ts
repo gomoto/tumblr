@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Observable, Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
@@ -24,6 +24,8 @@ export class AppComponent {
   // Manage all rxjs subscriptions in one place.
   private _subscriptions = new Subscription();
 
+  @ViewChild('blogInput') blogInput: ElementRef;
+
   constructor(
     private formBuilder: FormBuilder,
     private store: Store<State>
@@ -44,6 +46,11 @@ export class AppComponent {
     this._subscriptions.add(nameSubscription);
     this._subscriptions.add(sizeSubscription);
     this._subscriptions.add(cursorSubscription);
+  }
+
+  ngAfterViewInit(): void {
+    // Automatically focus on input.
+    this.blogInput.nativeElement.focus();
   }
 
   ngOnDestroy(): void {

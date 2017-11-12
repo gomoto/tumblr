@@ -17,12 +17,14 @@
   </header>
   <ul class="blog-posts">
     <li class="blog-post" *ngFor="let post of posts$ | async">
-      <a class="blog-link"
-        href="{{getPostLinkUrl(post)}}"
-        [ngStyle]="{'background-image': 'url(' + getPostPreviewUrl(post) + ')'}"
+      <!-- Link to raw resource -->
+      <a class="blog-resource"
+        href="{{getPostResourceUrl(post)}}"
+        [ngStyle]="{'background-image': 'url(' + getPostResourcePreviewUrl(post) + ')'}"
         title="{{post.date}}"
         target="_blank">
       </a>
+      <!-- Link to original post -->
       <a class="blog-notes" href="{{post.link}}" target="_blank">
         {{post.notes}} notes
       </a>

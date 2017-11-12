@@ -74,7 +74,7 @@ export class AppComponent {
     this.store.dispatch(new _blog.actions.DeleteAllPosts());
   }
 
-  getPostLinkUrl(post: _blog.Post): string {
+  getPostResourceUrl(post: _blog.Post): string {
     switch(post.type) {
       case 'photo': {
         return post.imageUrl;
@@ -88,7 +88,7 @@ export class AppComponent {
     }
   }
 
-  getPostPreviewUrl(post: _blog.Post): string {
+  getPostResourcePreviewUrl(post: _blog.Post): string {
     switch(post.type) {
       case 'photo': {
         return post.imagePreviewUrl;

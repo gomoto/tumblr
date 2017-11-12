@@ -25,7 +25,8 @@
   overflow: hidden;
 }
 .blog-link {
-  display: block;
+  display: flex;
+  align-items: flex-start;
   height: 100%;
   width: 100%;
   background-color: #222222;
@@ -34,9 +35,10 @@
   background-size: cover; // contain
 }
 .blog-post-notes {
-  display: block;
-  padding: 0 4px;
+  flex: 0 0 auto;
   background: rgba(0,0,0,0.24);
   color: #fafafa;
   font-size: 12px;
+  padding: 0 4px;
+  margin-top: 8px;
 }

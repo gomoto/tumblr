@@ -1,0 +1,44 @@
+.blog-info,
+.blog-posts {
+  margin: 24px 0;
+}
+.blog-info {
+  display: block;
+}
+.blog-posts {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+.blog-post {
+  flex: 0 0 auto;
+  position: relative;
+  display: block;
+  height: 200px;
+  width: 200px;
+  margin: 4px;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-start;
+}
+.blog-resource {
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: #222222;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover; // contain
+}
+.blog-notes {
+  flex: 0 0 auto;
+  position: relative;
+  background: rgba(0,0,0,0.24);
+  color: #fafafa;
+  font-size: 12px;
+  padding: 0 4px;
+  margin-top: 8px;
+}

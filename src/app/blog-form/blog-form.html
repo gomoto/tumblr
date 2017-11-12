@@ -1,0 +1,16 @@
+<form
+  class="blog-form"
+  [formGroup]="tumblrForm"
+  (ngSubmit)="submitForm()">
+  <input
+    #blogInput
+    type="text"
+    class="blog-name-input"
+    autocomplete="off"
+    formControlName="blog"
+    placeholder="Tumblr blog">
+  <!-- <input
+    type="number"
+    class="blog-cursor-input"
+    placeholder="Jump to post #"> -->
+</form>

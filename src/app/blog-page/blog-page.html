@@ -1,0 +1,30 @@
+<header class="blog-info">
+  <h1>
+    <a href="https://{{name}}.tumblr.com" [innerHTML]="name"></a>
+  </h1>
+  <h2>
+    <span [innerHTML]="cursor"></span>
+    <span>/</span>
+    <span [innerHTML]="size"></span>
+  </h2>
+  <div>
+    <button type="button" (click)="getPosts()">Get next 20 posts</button>
+    <span>·</span>
+    <button type="button" (click)="deleteAllPosts()">Remove all posts</button>
+  </div>
+</header>
+<ul class="blog-posts">
+  <li class="blog-post" *ngFor="let post of posts$ | async">
+    <!-- Link to raw resource -->
+    <a class="blog-resource"
+      href="{{getPostResourceUrl(post)}}"
+      [ngStyle]="{'background-image': 'url(' + getPostResourcePreviewUrl(post) + ')'}"
+      title="{{post.date}}"
+      target="_blank">
+    </a>
+    <!-- Link to original post -->
+    <a class="blog-notes" href="{{post.link}}" target="_blank">
+      {{post.notes}} notes
+    </a>
+  </li>
+</ul>

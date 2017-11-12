@@ -17,7 +17,6 @@ export function reducer(state = initialState, action: BlogAction) {
       }
     }
     case actionTypes.FETCH_POSTS_SUCCESS: {
-      // Merge in new posts; update cursor position.
       const posts = action.payload.posts;
       const fetchedPostsById = posts.reduce((_fetchedPostsById, post) => {
         _fetchedPostsById[post.id] = post;
@@ -25,7 +24,8 @@ export function reducer(state = initialState, action: BlogAction) {
       }, {});
       return {
         size: state.size,
-        posts: Object.assign({}, state.posts, fetchedPostsById)
+        // Overwrite instead of merge
+        posts: fetchedPostsById //  Object.assign({}, state.posts, fetchedPostsById)
       };
     }
     case actionTypes.DELETE_ALL_POSTS: {

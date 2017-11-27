@@ -4,16 +4,18 @@ import { State } from './state';
 
 const initialState: State = {
   size: 0,
-  posts: {}
+  posts: {},
+  postTypes: []
 };
 
-export function reducer(state = initialState, action: BlogAction) {
+export function reducer(state = initialState, action: BlogAction): State {
   switch(action.type) {
     case actionTypes.FETCH_INFO_SUCCESS: {
       return {
         size: action.payload.blogSize,
         // Reset cursor and posts for new blog.
-        posts: state.posts
+        posts: state.posts,
+        postTypes: state.postTypes
       }
     }
     case actionTypes.FETCH_POSTS_SUCCESS: {
@@ -25,14 +27,24 @@ export function reducer(state = initialState, action: BlogAction) {
       return {
         size: state.size,
         // Overwrite instead of merge
-        posts: fetchedPostsById //  Object.assign({}, state.posts, fetchedPostsById)
+        posts: fetchedPostsById, //  Object.assign({}, state.posts, fetchedPostsById)
+        postTypes: state.postTypes
       };
     }
     case actionTypes.DELETE_ALL_POSTS: {
       return {
         size: state.size,
-        posts: {}
+        posts: {},
+        postTypes: state.postTypes
       }
+    }
+    case actionTypes.SET_POST_TYPES_SUCCESS: {
+      return {
+        size: state.size,
+        posts: state.posts,
+        // Set post types.
+        postTypes: action.payload.postTypes
+      };
     }
     default: {
       return state;

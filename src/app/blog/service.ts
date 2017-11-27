@@ -81,8 +81,8 @@ export class BlogService {
         post.photos[0].original_size.url ||
         null
       ),
-      videoPreviewUrl: post.thumbnail_url,
-      videoUrl: post.video_url
+      videoPreviewUrl: post.thumbnail_url || null,
+      videoUrl: post.video_url || null
     }
   }
 }

@@ -5,6 +5,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
+import { StoreRouterConnectingModule } from '@ngrx/router-store';
 
 import { AppComponent } from './app.component';
 import { BlogForm } from './blog-form/blog-form';
@@ -32,6 +33,7 @@ import { BlogService } from './blog';
     ),
     StoreModule.forRoot(reducers),
     EffectsModule.forRoot(effects),
+    StoreRouterConnectingModule
   ],
   providers: [
     BlogService

@@ -1,21 +1,30 @@
 import { Effect, Actions } from '@ngrx/effects';
 import { Action } from '@ngrx/store';
+import { ROUTER_NAVIGATION, RouterNavigationAction } from '@ngrx/router-store';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { catchError, map, mergeMap, tap } from 'rxjs/operators';
+import * as isArray from 'isarray';
+import * as arrayXor from 'array-xor';
 
 import * as actions from './actions';
 import * as actionTypes from './action-types';
 import { Post } from './model';
 import { BlogService } from './service';
-import { InfoResponse, PostsResponse } from '../tumblr';
+import { InfoResponse, PostsResponse, TumblrPostType } from '../tumblr';
 
 @Injectable()
 export class BlogEffects {
+  private previousPostTypes: TumblrPostType[];
+
   constructor(
     private actions$: Actions,
-    private blogService: BlogService
-  ) {}
+    private blogService: BlogService,
+    private router: Router
+  ) {
+    this.previousPostTypes = [];
+  }
 
   // Log all actions.
   @Effect({dispatch: false})
@@ -61,6 +70,44 @@ export class BlogEffects {
         map<Post[], actions.FetchPostsSuccess>((posts) => new actions.FetchPostsSuccess({posts})),
         catchError<any, actions.FetchPostsFail>((error) => Observable.of(new actions.FetchPostsFail({blogName, apiKey, error})))
       )
+    })
+  )
+
+  // SetPostTypes action -> router navigation.
+  @Effect({dispatch: false})
+  setPostTypesInUrl$ = this.actions$
+  .ofType(actionTypes.SET_POST_TYPES)
+  .pipe(
+    tap<actions.SetPostTypes>((action) => {
+      const types = action.payload.postTypes;
+      // Clone query params.
+      const queryParams = Object.assign({}, this.router.routerState.snapshot.root.queryParams);
+      // Include types query param only if there are any types.
+      if (types.length > 0) {
+        queryParams['types'] = types;
+      } else {
+        delete queryParams['types'];
+      }
+      this.router.navigate([/* same state */], { queryParams });
+    })
+  )
+
+  // Router navigation -> SetPostTypes action iff types changed.
+  @Effect()
+  setPostTypes$ = this.actions$
+  .ofType(ROUTER_NAVIGATION)
+  .pipe(
+    map<RouterNavigationAction, actions.SetPostTypesSuccess | actions.Null>((action) => {
+      let types = action.payload.routerState.root.queryParams.types || [];
+      if (!isArray(types)) {
+        types = [types];
+      }
+      const symmetricDiff: TumblrPostType[] = arrayXor(this.previousPostTypes, types);
+      this.previousPostTypes = types;
+      if (symmetricDiff.length === 0) {
+        return new actions.Null();
+      }
+      return new actions.SetPostTypesSuccess({postTypes: types});
     })
   )
 }

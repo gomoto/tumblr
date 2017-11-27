@@ -83,10 +83,6 @@ export class BlogPage {
 
     // Whenever post type checkboxes change, update URL.
     this.postTypeForm.valueChanges.subscribe((x) => {
-      const queryParams = {
-        start: this.start,
-        end: this.end
-      };
       const postTypes: tumblr.TumblrPostType[] = [];
       if (this.postTypeForm.get('photo').value) {
         postTypes.push('photo');
@@ -94,14 +90,7 @@ export class BlogPage {
       if (this.postTypeForm.get('video').value) {
         postTypes.push('video');
       }
-      // Include types query param only if there are any types.
-      if (postTypes.length > 0) {
-        Object.assign(queryParams, {
-          types: postTypes
-        });
-      }
-      // this.store.dispatch(new _blog.actions.SetPostTypes({postTypes}));
-      this.router.navigate([this.name], { queryParams });
+      this.store.dispatch(new _blog.actions.SetPostTypes({postTypes}));
     });
 
     const sizeSubscription = this.store.select(selectors.blogSize).subscribe((size) => {

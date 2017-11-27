@@ -25,7 +25,9 @@
     "@ngrx/effects": "^4.1.1",
     "@ngrx/router-store": "^4.1.1",
     "@ngrx/store": "^4.1.1",
+    "array-xor": "^0.1.1",
     "core-js": "^2.4.1",
+    "isarray": "^2.0.2",
     "reselect": "^3.0.1",
     "rxjs": "^5.5.2",
     "zone.js": "^0.8.14"

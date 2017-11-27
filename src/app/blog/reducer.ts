@@ -5,7 +5,7 @@ import { State } from './state';
 const initialState: State = {
   size: 0,
   posts: {},
-  postTypes: ['photo', 'video']
+  postTypes: []
 };
 
 export function reducer(state = initialState, action: BlogAction): State {
@@ -38,7 +38,7 @@ export function reducer(state = initialState, action: BlogAction): State {
         postTypes: state.postTypes
       }
     }
-    case actionTypes.SET_POST_TYPES: {
+    case actionTypes.SET_POST_TYPES_SUCCESS: {
       return {
         size: state.size,
         posts: state.posts,

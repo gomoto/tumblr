@@ -65,6 +65,17 @@ export class SetPostTypes implements Action {
   }) {}
 }
 
+export class SetPostTypesSuccess implements Action {
+  readonly type = actionTypes.SET_POST_TYPES_SUCCESS;
+  constructor(public payload: {
+    postTypes: tumblr.TumblrPostType[]
+  }) {}
+}
+
+export class Null implements Action {
+  readonly type = 'NULL';
+}
+
 export type BlogAction =
   FetchInfo |
   FetchInfoSuccess |
@@ -74,4 +85,5 @@ export type BlogAction =
   FetchPostsFail |
   DeleteAllPosts |
   SetPostTypes |
-  null;
+  SetPostTypesSuccess |
+  Null;

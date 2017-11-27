@@ -7,6 +7,6 @@ export interface State {
   posts: {
     [postId: string]: Post;
   }
-  // Which post types are visible?
+  // Proxy for post types in URL state.
   postTypes: tumblr.TumblrPostType[];
 }

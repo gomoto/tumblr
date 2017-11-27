@@ -15,6 +15,20 @@
     <!-- <button type="button" (click)="deleteAllPosts()">Remove all posts</button> -->
   </div>
 </header>
+<form [formGroup]="postTypeForm">
+  <ul class="blog-post-types">
+    <!-- Photo -->
+    <li class="blog-post-type">
+      <input id="photo-post-type-input" type="checkbox" formControlName="photo">
+      <label for="photo-post-type-input">Photo</label>
+    </li>
+    <!-- Video -->
+    <li class="blog-post-type">
+      <input id="video-post-type-input" type="checkbox" formControlName="video">
+      <label for="video-post-type-input">Video</label>
+    </li>
+  </ul>
+</form>
 <ul class="blog-posts">
   <li class="blog-post" *ngFor="let post of posts$ | async">
     <!-- Link to raw resource -->

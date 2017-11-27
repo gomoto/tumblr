@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
+import { take } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 import * as selectors from '../selectors';
 import { State } from '../state';
@@ -22,12 +24,14 @@ export class BlogPage {
   end: number;
   size: number;
   posts$: Observable<_blog.Post[]>;
+  postTypeForm: FormGroup;
 
   // Manage all rxjs subscriptions in one place.
   private _subscriptions = new Subscription();
 
   constructor(
     private activatedRoute: ActivatedRoute,
+    private formBuilder: FormBuilder,
     private router: Router,
     private store: Store<State>
   ) {
@@ -86,12 +90,44 @@ export class BlogPage {
       }));
     });
 
+    // Create post type checkboxes.
+    this.postTypeForm = this.formBuilder.group({
+      photo: false,
+      video: false
+    });
+
+    // Whenever post type checkboxes change, dispatch action.
+    this.postTypeForm.valueChanges.subscribe((x) => {
+      const postTypes: tumblr.TumblrPostType[] = [];
+      if (this.postTypeForm.get('photo').value) {
+        postTypes.push('photo');
+      }
+      if (this.postTypeForm.get('video').value) {
+        postTypes.push('video');
+      }
+      this.store.dispatch(new _blog.actions.SetPostTypes({postTypes}));
+    });
+
     const sizeSubscription = this.store.select(selectors.blogSize).subscribe((size) => {
       this.size = size;
     });
-    this.posts$ = this.store.select(selectors.blogPostsSortedByNoteCount);
+
+    // Initialize post type checkboxes with take(1).
+    const postTypesSubscription = this.store.select(selectors.blogPostTypes).pipe(
+      take<tumblr.TumblrPostType[]>(1)
+    )
+    .subscribe((types) => {
+      console.debug('Initializing values for post type checkboxes');
+      this.postTypeForm.setValue({
+        photo: types.indexOf('photo') > -1,
+        video: types.indexOf('video') > -1
+      });
+    });
+
+    this.posts$ = this.store.select(selectors.blogPostsSortedByNoteCountFilteredByType);
     this._subscriptions.add(queryParamMapSubscription);
     this._subscriptions.add(sizeSubscription);
+    this._subscriptions.add(postTypesSubscription);
   }
 
   ngOnInit(): void {

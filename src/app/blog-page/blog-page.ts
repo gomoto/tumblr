@@ -19,6 +19,7 @@ const apiKey = 'u9oKp2z6VfHuyX7mkfX40S2uSfjZpYSKc6EkMWo2F9SbVtM1hS';
 })
 export class BlogPage {
   name: string;
+  types: string[];
   start: number;
   end: number;
   size: number;
@@ -35,24 +36,33 @@ export class BlogPage {
     private store: Store<State>
   ) {
     this.name = activatedRoute.snapshot.params.blogName;
+    this.types = activatedRoute.snapshot.queryParams.types || [];
 
     const queryParamMapSubscription = activatedRoute.queryParamMap.subscribe((queryParamMap) => {
       // Validate start and end.
-      this.start = parseInt(queryParamMap.get('start'));
-      this.end = parseInt(queryParamMap.get('end'));
-      if (isNaN(this.start)) {
-        this.start = 1;
+      let start = parseInt(queryParamMap.get('start'));
+      let end = parseInt(queryParamMap.get('end'));
+      if (isNaN(start)) {
+        start = 1;
       }
-      if (isNaN(this.end)) {
-        this.end = 20;
+      if (isNaN(end)) {
+        end = 20;
       }
-      if (this.start < 1) {
+      if (start < 1) {
         throw new Error('Bad query param for start');
       }
       // TODO: validate end param against total size.
-      if (this.start > this.end) {
+      if (start > end) {
         throw new Error('Bad query params for start and end');
       }
+
+      // Only fetch posts if start value or end value has changed.
+      if (this.start === start && this.end === end) {
+        return;
+      }
+
+      this.start = start;
+      this.end = end;
 
       // Ranges need to be converted here. Example:
       // Human-friendly range is 1-10, including 10.
@@ -65,14 +75,18 @@ export class BlogPage {
       }));
     });
 
-    // Create post type checkboxes.
+    // Initialize post type checkboxes from URL.
     this.postTypeForm = this.formBuilder.group({
-      photo: false,
-      video: false
+      photo: this.types.indexOf('photo') > -1,
+      video: this.types.indexOf('video') > -1
     });
 
-    // Whenever post type checkboxes change, dispatch action.
+    // Whenever post type checkboxes change, update URL.
     this.postTypeForm.valueChanges.subscribe((x) => {
+      const queryParams = {
+        start: this.start,
+        end: this.end
+      };
       const postTypes: tumblr.TumblrPostType[] = [];
       if (this.postTypeForm.get('photo').value) {
         postTypes.push('photo');
@@ -80,29 +94,23 @@ export class BlogPage {
       if (this.postTypeForm.get('video').value) {
         postTypes.push('video');
       }
-      this.store.dispatch(new _blog.actions.SetPostTypes({postTypes}));
+      // Include types query param only if there are any types.
+      if (postTypes.length > 0) {
+        Object.assign(queryParams, {
+          types: postTypes
+        });
+      }
+      // this.store.dispatch(new _blog.actions.SetPostTypes({postTypes}));
+      this.router.navigate([this.name], { queryParams });
     });
 
     const sizeSubscription = this.store.select(selectors.blogSize).subscribe((size) => {
       this.size = size;
     });
 
-    // Initialize post type checkboxes with take(1).
-    const postTypesSubscription = this.store.select(selectors.blogPostTypes).pipe(
-      take<tumblr.TumblrPostType[]>(1)
-    )
-    .subscribe((types) => {
-      console.debug('Initializing values for post type checkboxes');
-      this.postTypeForm.setValue({
-        photo: types.indexOf('photo') > -1,
-        video: types.indexOf('video') > -1
-      });
-    });
-
     this.posts$ = this.store.select(selectors.blogPostsSortedByNoteCountFilteredByType);
     this._subscriptions.add(queryParamMapSubscription);
     this._subscriptions.add(sizeSubscription);
-    this._subscriptions.add(postTypesSubscription);
   }
 
   ngOnInit(): void {
@@ -115,12 +123,17 @@ export class BlogPage {
   }
 
   getPosts(): void {
-    this.router.navigate([this.name], {
-      queryParams: {
-        start: this.end + 1,
-        end: this.end + 1 + this.end - this.start
-      }
-    });
+    const queryParams = {
+      start: this.end + 1,
+      end: this.end + 1 + this.end - this.start
+    };
+    // Include types query param only if there are any types.
+    if (this.types.length > 0) {
+      Object.assign(queryParams, {
+        types: this.types
+      });
+    }
+    this.router.navigate([this.name], { queryParams });
   }
 
   deleteAllPosts(): void {

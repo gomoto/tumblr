@@ -10,7 +10,9 @@
     <span [innerHTML]="size"></span>
   </h2>
   <div>
-    <button type="button" (click)="getPosts()">Next {{end - start + 1}} posts</button>
+    <button type="button" (click)="goToPreviousChunk()" [disabled]="!canGoToPreviousChunk()">Previous {{end - start + 1}} posts</button>
+    <span>·</span>
+    <button type="button" (click)="goToNextChunk()" [disabled]="!canGoToNextChunk()">Next {{end - start + 1}} posts</button>
     <!-- <span>·</span> -->
     <!-- <button type="button" (click)="deleteAllPosts()">Remove all posts</button> -->
   </div>

@@ -111,11 +111,39 @@ export class BlogPage {
     this._subscriptions.unsubscribe();
   }
 
-  getPosts(): void {
-    const queryParams = {
-      start: this.end + 1,
-      end: this.end + 1 + this.end - this.start
-    };
+  canGoToPreviousChunk(): boolean {
+    const diff = this.end - this.start;
+    const start = this.start - 1 - diff;
+    return start >= 1;
+  }
+
+  // TODO
+  canGoToNextChunk(): boolean {
+    return true;
+  }
+
+  goToPreviousChunk(): void {
+    const diff = this.end - this.start;
+    const start = this.start - 1 - diff;
+    const end = this.start - 1;
+    if (start < 1) {
+      return;
+    }
+    const queryParams = { start, end };
+    // Include types query param only if there are any types.
+    if (this.types.length > 0) {
+      Object.assign(queryParams, {
+        types: this.types
+      });
+    }
+    this.router.navigate([this.name], { queryParams });
+  }
+
+  goToNextChunk(): void {
+    const diff = this.end - this.start;
+    const start = this.end + 1;
+    const end = this.end + 1 + diff;
+    const queryParams = { start, end };
     // Include types query param only if there are any types.
     if (this.types.length > 0) {
       Object.assign(queryParams, {

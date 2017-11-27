@@ -1,6 +1,7 @@
 import { Action } from '@ngrx/store';
 import * as actionTypes from './action-types';
 import { Post } from './model';
+import * as tumblr from '../tumblr';
 
 export class FetchInfo implements Action {
   readonly type = actionTypes.FETCH_INFO;
@@ -58,6 +59,13 @@ export class DeleteAllPosts implements Action {
   readonly type = actionTypes.DELETE_ALL_POSTS;
 }
 
+export class SetPostTypes implements Action {
+  readonly type = actionTypes.SET_POST_TYPES;
+  constructor(public payload: {
+    postTypes: tumblr.TumblrPostType[]
+  }) {}
+}
+
 export type BlogAction =
   FetchInfo |
   FetchInfoSuccess |
@@ -66,4 +74,5 @@ export type BlogAction =
   FetchPostsSuccess |
   FetchPostsFail |
   DeleteAllPosts |
+  SetPostTypes |
   null;

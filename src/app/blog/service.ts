@@ -19,13 +19,8 @@ export class BlogService {
   }
 
   // Tumblr API restricts us to 20 posts per request.
-  fetchPosts(blogName: string, apiKey: string, start: number, end: number, type = ''): Observable<Post[]> {
-    // Build base URL
-    let baseUrl = `https://api.tumblr.com/v2/blog/${blogName}/posts`;
-    if (type) {
-      baseUrl += `/${type}`;
-    }
-    baseUrl += `?api_key=${apiKey}`;
+  fetchPosts(blogName: string, apiKey: string, start: number, end: number): Observable<Post[]> {
+    const baseUrl = `https://api.tumblr.com/v2/blog/${blogName}/posts?api_key=${apiKey}`;
 
     // Break down requests into multiple windows.
     const windowSize = 20;

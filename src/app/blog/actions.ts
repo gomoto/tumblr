@@ -33,7 +33,6 @@ export class FetchPosts implements Action {
   constructor(public payload: {
     blogName: string,
     apiKey: string,
-    type: string,
     start: number,
     end: number
   }) {}

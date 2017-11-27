@@ -56,7 +56,8 @@ export class BlogEffects {
       const blogName = action.payload.blogName;
       const start = action.payload.start;
       const end = action.payload.end;
-      return this.blogService.fetchPosts(blogName, apiKey, start, end)
+      const type = action.payload.type;
+      return this.blogService.fetchPosts(blogName, apiKey, start, end, type)
       .pipe(
         map<Post[], actions.FetchPostsSuccess>((posts) => new actions.FetchPostsSuccess({posts})),
         catchError<any, actions.FetchPostsFail>((error) => Observable.of(new actions.FetchPostsFail({blogName, apiKey, error})))

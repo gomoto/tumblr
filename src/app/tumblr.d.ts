@@ -107,3 +107,13 @@ export interface TumblrPhoto {
   width: number;
   height: number;
 }
+
+export type TumblrPostType =
+  'answer' |
+  'audio' |
+  'chat' |
+  'link' |
+  'photo' |
+  'quote' |
+  'text' |
+  'video';

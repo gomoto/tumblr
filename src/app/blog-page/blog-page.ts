@@ -38,7 +38,7 @@ export class BlogPage {
     this.name = activatedRoute.snapshot.params.blogName;
     this.types = activatedRoute.snapshot.queryParams.types || [];
 
-    const queryParamMapSubscription = activatedRoute.queryParamMap.subscribe((queryParamMap) => {
+    const startEndSubscription = activatedRoute.queryParamMap.subscribe((queryParamMap) => {
       // Validate start and end.
       let start = parseInt(queryParamMap.get('start'));
       let end = parseInt(queryParamMap.get('end'));
@@ -98,7 +98,7 @@ export class BlogPage {
     });
 
     this.posts$ = this.store.select(selectors.blogPostsSortedByNoteCountFilteredByType);
-    this._subscriptions.add(queryParamMapSubscription);
+    this._subscriptions.add(startEndSubscription);
     this._subscriptions.add(sizeSubscription);
   }
 

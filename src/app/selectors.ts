@@ -26,9 +26,24 @@ export const routerState = (state: State) => state.router;
 export const types = createSelector(routerState, (routerState) => {
   return routerState.state.root.queryParamMap.getAll('types');
 });
-export const start = createSelector(routerState, (routerState) => {
-  return routerState.state.root.queryParamMap.get('start');
-});
-export const end = createSelector(routerState, (routerState) => {
-  return routerState.state.root.queryParamMap.get('end');
+export const startEnd = createSelector(routerState, (routerState) => {
+  const queryParamMap = routerState.state.root.queryParamMap;
+
+  // Validate start and end.
+  let start = parseInt(queryParamMap.get('start'));
+  let end = parseInt(queryParamMap.get('end'));
+  if (isNaN(start)) {
+    start = 1;
+  }
+  if (isNaN(end)) {
+    end = 20;
+  }
+  if (start < 1) {
+    throw new Error('Bad query param for start');
+  }
+  // TODO: validate end param against total size.
+  if (start > end) {
+    throw new Error('Bad query params for start and end');
+  }
+  return { start, end };
 });

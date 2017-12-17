@@ -58,6 +58,14 @@ export class DeleteAllPosts implements Action {
   readonly type = actionTypes.DELETE_ALL_POSTS;
 }
 
+export class SetPostRange implements Action {
+  readonly type = actionTypes.SET_POST_RANGE;
+  constructor(public payload: {
+    start: number,
+    end: number
+  }) {}
+}
+
 export class SetPostTypes implements Action {
   readonly type = actionTypes.SET_POST_TYPES;
   constructor(public payload: {
@@ -84,6 +92,7 @@ export type BlogAction =
   FetchPostsSuccess |
   FetchPostsFail |
   DeleteAllPosts |
+  SetPostRange |
   SetPostTypes |
   SetPostTypesSuccess |
   Null;

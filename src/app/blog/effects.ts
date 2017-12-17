@@ -73,6 +73,31 @@ export class BlogEffects {
     })
   )
 
+  // SetPostRange action -> router navigation.
+  @Effect({dispatch: false})
+  setPostRange$ = this.actions$
+  .ofType(actionTypes.SET_POST_RANGE)
+  .pipe(
+    tap<actions.SetPostRange>((action) => {
+      const start = action.payload.start;
+      const end = action.payload.end;
+      // Include start and end query params only if they exist.
+      // Pass through all other query params; start with a clone of query params.
+      const queryParams = Object.assign({}, this.router.routerState.snapshot.root.queryParams);
+      if (start && start > 0) {
+        queryParams.start = start;
+      } else {
+        delete queryParams.start;
+      }
+      if (end && end > 0) {
+        queryParams.end = end;
+      } else {
+        delete queryParams.end;
+      }
+      this.router.navigate([/* same state */], { queryParams });
+    })
+  )
+
   // SetPostTypes action -> router navigation.
   @Effect({dispatch: false})
   setPostTypesInUrl$ = this.actions$

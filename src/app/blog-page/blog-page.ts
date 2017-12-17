@@ -38,32 +38,9 @@ export class BlogPage {
     this.name = activatedRoute.snapshot.params.blogName;
     this.types = activatedRoute.snapshot.queryParams.types || [];
 
-    const startEndSubscription = activatedRoute.queryParamMap.subscribe((queryParamMap) => {
-      // Validate start and end.
-      let start = parseInt(queryParamMap.get('start'));
-      let end = parseInt(queryParamMap.get('end'));
-      if (isNaN(start)) {
-        start = 1;
-      }
-      if (isNaN(end)) {
-        end = 20;
-      }
-      if (start < 1) {
-        throw new Error('Bad query param for start');
-      }
-      // TODO: validate end param against total size.
-      if (start > end) {
-        throw new Error('Bad query params for start and end');
-      }
-
-      // Only fetch posts if start value or end value has changed.
-      if (this.start === start && this.end === end) {
-        return;
-      }
-
-      this.start = start;
-      this.end = end;
-
+    store.select(selectors.startEnd).subscribe((range) => {
+      this.start = range.start;
+      this.end = range.end;
       // Ranges need to be converted here. Example:
       // Human-friendly range is 1-10, including 10.
       // Machine-friendly range is 0-10, excluding 10.
@@ -98,7 +75,6 @@ export class BlogPage {
     });
 
     this.posts$ = this.store.select(selectors.blogPostsSortedByNoteCountFilteredByType);
-    this._subscriptions.add(startEndSubscription);
     this._subscriptions.add(sizeSubscription);
   }
 
@@ -129,28 +105,14 @@ export class BlogPage {
     if (start < 1) {
       return;
     }
-    const queryParams = { start, end };
-    // Include types query param only if there are any types.
-    if (this.types.length > 0) {
-      Object.assign(queryParams, {
-        types: this.types
-      });
-    }
-    this.router.navigate([this.name], { queryParams });
+    this.store.dispatch(new _blog.actions.SetPostRange({ start, end }));
   }
 
   goToNextChunk(): void {
     const diff = this.end - this.start;
     const start = this.end + 1;
     const end = this.end + 1 + diff;
-    const queryParams = { start, end };
-    // Include types query param only if there are any types.
-    if (this.types.length > 0) {
-      Object.assign(queryParams, {
-        types: this.types
-      });
-    }
-    this.router.navigate([this.name], { queryParams });
+    this.store.dispatch(new _blog.actions.SetPostRange({ start, end }));
   }
 
   deleteAllPosts(): void {

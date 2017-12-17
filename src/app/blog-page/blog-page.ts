@@ -39,6 +39,10 @@ export class BlogPage {
     this.types = activatedRoute.snapshot.queryParams.types || [];
 
     store.select(selectors.startEnd).subscribe((range) => {
+      // Fetch posts only if range has changed.
+      if (range.start === this.start && range.end === this.end) {
+        return;
+      }
       this.start = range.start;
       this.end = range.end;
       // Ranges need to be converted here. Example:

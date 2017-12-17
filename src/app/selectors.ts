@@ -20,3 +20,15 @@ export const blogPostsSortedByNoteCountFilteredByType = createSelector(blogPosts
   const filteredSortedPosts = filteredPosts.slice().sort((a, b) => b.notes - a.notes);
   return filteredSortedPosts;
 });
+
+// Selectors for URL state.
+export const routerState = (state: State) => state.router;
+export const types = createSelector(routerState, (routerState) => {
+  return routerState.state.root.queryParamMap.getAll('types');
+});
+export const start = createSelector(routerState, (routerState) => {
+  return routerState.state.root.queryParamMap.get('start');
+});
+export const end = createSelector(routerState, (routerState) => {
+  return routerState.state.root.queryParamMap.get('end');
+});

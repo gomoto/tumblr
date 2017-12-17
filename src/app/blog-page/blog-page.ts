@@ -87,9 +87,22 @@ export class BlogPage {
     this._subscriptions.unsubscribe();
   }
 
-  canGoToPreviousChunk(): boolean {
+  private getPreviousRange(start: number, end: number): { start: number, end: number } {
+    const diff = end - start;
+    const newStart = start - 1 - diff;
+    const newEnd = start - 1;
+    return { start: newStart, end: newEnd };
+  }
+
+  private getNextRange(start: number, end: number): { start: number, end: number } {
     const diff = this.end - this.start;
-    const start = this.start - 1 - diff;
+    const newStart = this.end + 1;
+    const newEnd = this.end + 1 + diff;
+    return { start: newStart, end: newEnd };
+  }
+
+  canGoToPreviousChunk(): boolean {
+    const { start } = this.getPreviousRange(this.start, this.end);
     return start >= 1;
   }
 
@@ -99,9 +112,8 @@ export class BlogPage {
   }
 
   goToPreviousChunk(): void {
-    const diff = this.end - this.start;
-    const start = this.start - 1 - diff;
-    const end = this.start - 1;
+    const previousRange = this.getPreviousRange(this.start, this.end);
+    const { start, end } = previousRange;
     if (start < 1) {
       return;
     }
@@ -109,9 +121,8 @@ export class BlogPage {
   }
 
   goToNextChunk(): void {
-    const diff = this.end - this.start;
-    const start = this.end + 1;
-    const end = this.end + 1 + diff;
+    const nextRange = this.getNextRange(this.start, this.end);
+    const { start, end } = nextRange;
     this.store.dispatch(new _blog.actions.SetPostRange({ start, end }));
   }
 

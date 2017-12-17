@@ -74,6 +74,10 @@ export class BlogPage {
       this.size = size;
     });
 
+    store.select(selectors.postTypes).subscribe((types) => {
+      console.dir(types);
+    });
+
     this.posts$ = this.store.select(selectors.blogPostsSortedByNoteCountFilteredByType);
     this._subscriptions.add(sizeSubscription);
   }

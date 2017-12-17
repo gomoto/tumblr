@@ -4,8 +4,7 @@ import { State } from './state';
 
 const initialState: State = {
   size: 0,
-  posts: {},
-  postTypes: []
+  posts: {}
 };
 
 export function reducer(state = initialState, action: BlogAction): State {
@@ -14,8 +13,7 @@ export function reducer(state = initialState, action: BlogAction): State {
       return {
         size: action.payload.blogSize,
         // Reset cursor and posts for new blog.
-        posts: state.posts,
-        postTypes: state.postTypes
+        posts: state.posts
       }
     }
     case actionTypes.FETCH_POSTS_SUCCESS: {
@@ -27,15 +25,13 @@ export function reducer(state = initialState, action: BlogAction): State {
       return {
         size: state.size,
         // Overwrite instead of merge
-        posts: fetchedPostsById, //  Object.assign({}, state.posts, fetchedPostsById)
-        postTypes: state.postTypes
+        posts: fetchedPostsById //  Object.assign({}, state.posts, fetchedPostsById)
       };
     }
     case actionTypes.DELETE_ALL_POSTS: {
       return {
         size: state.size,
-        posts: {},
-        postTypes: state.postTypes
+        posts: {}
       }
     }
     default: {

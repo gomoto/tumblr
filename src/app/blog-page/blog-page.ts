@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
-import { take } from 'rxjs/operators';
+import 'rxjs/add/operator/take';
 import { Store } from '@ngrx/store';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
@@ -36,7 +36,6 @@ export class BlogPage {
     private store: Store<State>
   ) {
     this.name = activatedRoute.snapshot.params.blogName;
-    this.types = activatedRoute.snapshot.queryParams.types || [];
 
     store.select(selectors.startEnd).subscribe((range) => {
       // Fetch posts only if range has changed.
@@ -56,10 +55,19 @@ export class BlogPage {
       }));
     });
 
-    // Initialize post type checkboxes from URL.
+    // Initialize post type checkboxes.
     this.postTypeForm = this.formBuilder.group({
-      photo: this.types.indexOf('photo') > -1,
-      video: this.types.indexOf('video') > -1
+      photo: false,
+      video: false
+    });
+    // URL state is available synchronously.
+    // First subscribe call happens synchronously.
+    // So values are set right away.
+    store.select(selectors.postTypes).take(1).subscribe((types) => {
+      this.postTypeForm.setValue({
+        photo: types.indexOf('photo') > -1,
+        video: types.indexOf('video') > -1
+      });
     });
 
     // Whenever post type checkboxes change, update URL.
@@ -76,10 +84,6 @@ export class BlogPage {
 
     const sizeSubscription = this.store.select(selectors.blogSize).subscribe((size) => {
       this.size = size;
-    });
-
-    store.select(selectors.postTypes).subscribe((types) => {
-      console.dir(types);
     });
 
     this.posts$ = this.store.select(selectors.blogPostsSortedByNoteCountFilteredByType);

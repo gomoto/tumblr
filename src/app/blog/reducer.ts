@@ -38,14 +38,6 @@ export function reducer(state = initialState, action: BlogAction): State {
         postTypes: state.postTypes
       }
     }
-    case actionTypes.SET_POST_TYPES_SUCCESS: {
-      return {
-        size: state.size,
-        posts: state.posts,
-        // Set post types.
-        postTypes: action.payload.postTypes
-      };
-    }
     default: {
       return state;
     }

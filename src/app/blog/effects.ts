@@ -116,23 +116,4 @@ export class BlogEffects {
       this.router.navigate([/* same state */], { queryParams });
     })
   )
-
-  // Router navigation -> SetPostTypes action iff types changed.
-  @Effect()
-  setPostTypes$ = this.actions$
-  .ofType(ROUTER_NAVIGATION)
-  .pipe(
-    map<RouterNavigationAction, actions.SetPostTypesSuccess | actions.Null>((action) => {
-      let types = action.payload.routerState.root.queryParams.types || [];
-      if (!isArray(types)) {
-        types = [types];
-      }
-      const symmetricDiff: TumblrPostType[] = arrayXor(this.previousPostTypes, types);
-      this.previousPostTypes = types;
-      if (symmetricDiff.length === 0) {
-        return new actions.Null();
-      }
-      return new actions.SetPostTypesSuccess({postTypes: types});
-    })
-  )
 }
